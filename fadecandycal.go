@@ -5,16 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/kellydunn/go-opc"
+	"github.com/solarkennedy/fadecandycal/colors"
 	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
 	"time"
 )
-
-type Color struct {
-	R, G, B uint8
-}
 
 func random(min, max int) uint8 {
 	xr := rand.Intn(max-min) + min
@@ -49,7 +46,6 @@ func displayPattern(oc *opc.Client, leds_len int) {
 func turnOff(oc *opc.Client, leds_len int) {
 	m := opc.NewMessage(0)
 	for i := 0; i < leds_len; i++ {
-		// send pixel data
 		m.SetLength(uint16(leds_len * 3))
 		m.SetPixelColor(i, 0, 0, 0)
 	}
@@ -125,6 +121,7 @@ func main() {
 	oc := getOCClient()
 
 	for {
+		color_pallete := colors.GetTodaysColors()
 		if shouldIBeOn() == true {
 			displayPattern(oc, leds_len)
 		} else {
