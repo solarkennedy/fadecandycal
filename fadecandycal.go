@@ -90,13 +90,17 @@ func getKodiGetActivePlayers() []interface{} {
 
 	req, err := http.NewRequest("POST", "http://10.0.2.10:8080/jsonrpc", body)
 	if err != nil {
+		fmt.Println("Error talking to kodi: ")
 		fmt.Println(err)
+		return nil
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
+		fmt.Println("Error talking to kodi: ")
 		fmt.Println(err)
+		return nil
 	}
 	var result map[string]interface{}
 	body_bytes, _ := ioutil.ReadAll(resp.Body)
