@@ -13,3 +13,10 @@ deploy: fadecandycal.mips
 
 fadecandycal.mips: fadecandycal.go
 	GOOS=linux GOARCH=mips GOMIPS=softfloat go build -o fadecandycal.mips
+
+test:
+	go test -v .
+	cd colors && go test -v
+
+fmt:
+	go fmt ...

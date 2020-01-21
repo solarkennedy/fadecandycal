@@ -121,10 +121,13 @@ func main() {
 	oc := getOCClient()
 
 	for {
-		color_pallete := colors.GetTodaysColors()
+		color_pallete := colors.GetDaysColors(time.Now())
+		fmt.Println(color_pallete)
 		if shouldIBeOn() == true {
+			fmt.Println("Should be on")
 			displayPattern(oc, leds_len)
 		} else {
+			fmt.Println("Should be off")
 			turnOff(oc, leds_len)
 		}
 		time.Sleep(time.Duration(10) * time.Second)
