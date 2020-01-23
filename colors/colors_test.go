@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 	"time"
+	  "github.com/stretchr/testify/assert"
 )
 
 func TestAllDays(t *testing.T) {
@@ -19,7 +20,16 @@ func TestAllDays(t *testing.T) {
 func TestTodayIs(t *testing.T) {
 	const shortForm = "2006-Jan-02"
 	march8, _ := time.Parse(shortForm, "2001-Mar-08")
-	if TodayIs("March 8", march8) != true {
-		t.Errorf("Wrong parsing for: march8")
-	}
+	assert.Equal(t, TodayIs("March 8", march8), true)
+}
+
+func TestTodayIsRange(t *testing.T) {
+	const shortForm = "2006-Jan-02"
+	march8, _ := time.Parse(shortForm, "2001-Mar-08")
+	assert.Equal(t, TodayIsRange("March 6", 3, march8), false)
+	assert.Equal(t, TodayIsRange("March 7", 3, march8), false)
+	assert.Equal(t, TodayIsRange("March 8", 3, march8), true)
+	assert.Equal(t, TodayIsRange("March 9", 3, march8), true)
+	assert.Equal(t, TodayIsRange("March 10", 3, march8), true)
+	assert.Equal(t, TodayIsRange("March 11", 3, march8), false)
 }
