@@ -1,6 +1,6 @@
 go:
 	go build .
-	./fadecandycal
+	bash -c 'FADECANDYCAL_DATE=`date  "+%B %d"` ./fadecandycal'
 
 stop:
 	ssh root@10.0.2.113 -- /etc/init.d/fadecandycal stop

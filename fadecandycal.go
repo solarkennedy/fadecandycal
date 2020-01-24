@@ -10,8 +10,15 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
+	"strconv"
+	"strings"
 	"time"
 )
+
+func getEnvOverride() string {
+	return os.Getenv("FADECANDYCAL_DATE")
+}
 
 func random(min, max int) uint8 {
 	xr := rand.Intn(max-min) + min
@@ -19,22 +26,27 @@ func random(min, max int) uint8 {
 }
 
 func shouldIBeOn() bool {
-	if isKodiPlayingVideo() {
+	if getEnvOverride() != "" {
+		return true
+	} else if isKodiPlayingVideo() {
 		return false
 	} else {
 		pst, _ := time.LoadLocation("America/Los_Angeles")
 		now := time.Now().In(pst)
 		hour := now.Hour()
-		fmt.Println(hour)
 		return (hour >= 18 && hour <= 21) || (hour > 6 && hour <= 7)
 	}
 }
 
-func displayPattern(oc *opc.Client, leds_len int) {
+func displayPattern(oc *opc.Client, leds_len int, color_palette []colors.Color) {
 	m := opc.NewMessage(0)
-	for i := 0; i < leds_len; i++ {
-		m.SetLength(uint16(leds_len * 3))
-		m.SetPixelColor(i, random(2, 255), random(2, 255), random(2, 255))
+	if len(color_palette) == 0 {
+		for i := 0; i < leds_len; i++ {
+			m.SetLength(uint16(leds_len * 3))
+			m.SetPixelColor(i, random(2, 255), random(2, 255), random(2, 255))
+		}
+	} else {
+		fmt.Println("TODO: work with the palette")
 	}
 	err := oc.Send(m)
 	if err != nil {
@@ -116,18 +128,49 @@ func getOCClient() *opc.Client {
 	return oc
 }
 
+func parseOverride(input string) time.Time {
+	s := strings.Split(input, " ")
+	month := s[0]
+	day, _ := strconv.Atoi(s[1])
+	today := time.Now()
+	parsed := time.Date(today.Year(), monthToMonth(month), day, 0, 0, 0, 0, today.Location())
+	fmt.Printf("Parsed env override '%s' as '%s'\n", input, parsed)
+	return parsed
+}
+
+func monthToMonth(input string) time.Month {
+	month := time.Month(0)
+	for i := 1; i < 12; i++ {
+		month = time.Month((1 << uint(i-1)))
+		if month.String() == input {
+			return month
+		}
+
+	}
+	return month
+
+}
+
+func getToday() time.Time {
+	override := getEnvOverride()
+	if override != "" {
+		return parseOverride(override)
+	} else {
+		return time.Now()
+	}
+}
+
 func main() {
 	leds_len := 50
 	oc := getOCClient()
 
 	for {
-		color_pallete := colors.GetDaysColors(time.Now())
-		fmt.Println(color_pallete)
+		today := getToday()
+		color_palette := colors.GetDaysColors(today)
+		fmt.Println(color_palette)
 		if shouldIBeOn() == true {
-			fmt.Println("Should be on")
-			displayPattern(oc, leds_len)
+			displayPattern(oc, leds_len, color_palette)
 		} else {
-			fmt.Println("Should be off")
 			turnOff(oc, leds_len)
 		}
 		time.Sleep(time.Duration(10) * time.Second)

@@ -12,8 +12,8 @@ type Color struct {
 	R, G, B uint8
 }
 
-func PrintColors(colors []Color, occasion string) {
-	fmt.Printf("For %s our colors will be [", occasion)
+func PrintColors(colors []Color, occasion string, day time.Time) {
+	fmt.Printf("For %s (%s) our colors will be [", occasion, day)
 	for _, c := range colors {
 		cprint := color.RGB(c.R, c.G, c.B) // fg color
 		cprint.Print("█")
@@ -33,7 +33,7 @@ func GetDaysColors(day time.Time) []Color {
 		colors = []Color{Color{255, 79, 199}, Color{0, 0, 0}}
 	} else if TodayIs("January 20", day) {
 		occasion = "MLK Day"
-		colors = []Color{Color{239, 52, 35}, Color{255, 209,  2}, Color{ 46, 151 , 67}, Color{}}
+		colors = []Color{Color{239, 52, 35}, Color{255, 209, 2}, Color{46, 151, 67}, Color{}}
 	} else if TodayIs("January 25", day) {
 		occasion = "Chinese New Year"
 		colors = []Color{Color{120, 0, 0}, Color{168, 0, 0}, Color{190, 24, 0}, Color{255, 212, 37}, Color{239, 196, 22}}
@@ -48,16 +48,16 @@ func GetDaysColors(day time.Time) []Color {
 		colors = []Color{Color{212, 175, 55}, Color{0, 0, 0}}
 	} else if TodayIsRange("February 19", 5, day) {
 		occasion = "Black History Month"
-		colors = []Color{Color{239, 52, 35}, Color{255, 209,  2}, Color{ 46, 151 , 67}, Color{}}
+		colors = []Color{Color{239, 52, 35}, Color{255, 209, 2}, Color{46, 151, 67}, Color{}}
 	} else if TodayIs("March 8", day) {
 		occasion = "International Women's Day"
 		colors = []Color{Color{87, 74, 114}, Color{0, 0, 0}}
 	} else {
-		occasion = "Unknown"
+		occasion = "(No Occasion)"
 		colors = []Color{}
 	}
 
-	PrintColors(colors, occasion)
+	PrintColors(colors, occasion, day)
 	return colors
 }
 
