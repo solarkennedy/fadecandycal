@@ -40,6 +40,15 @@ func GetDaysColors(day time.Time) []Color {
 	} else if TodayIs("January 29", day) {
 		occasion = "NEN Awards"
 		colors = []Color{Color{151, 193, 209}, Color{123, 170, 124}, Color{250, 187, 24}}
+	} else if TodayIsRange("January 1", 31, day) {
+		occasion = "January"
+		colors = []Color{
+			Color{204, 204, 204},
+			Color{159, 184, 181},
+			Color{108, 121, 129},
+			Color{83, 74, 96},
+			Color{64, 70, 111},
+		}
 	} else if TodayIsRange("February 1", 2, day) {
 		occasion = "Red/Gold - 49ers at Superbowl"
 		colors = []Color{Color{187, 52, 49}, Color{186, 150, 106}}
@@ -49,9 +58,109 @@ func GetDaysColors(day time.Time) []Color {
 	} else if TodayIsRange("February 19", 5, day) {
 		occasion = "Black History Month"
 		colors = []Color{Color{239, 52, 35}, Color{255, 209, 2}, Color{46, 151, 67}, Color{}}
+	} else if TodayIsRange("February 1", 28, day) {
+		occasion = "February"
+		colors = []Color{
+			Color{236, 156, 192},
+			Color{240, 177, 212},
+			Color{246, 207, 245},
+			Color{227, 219, 255},
+			Color{210, 213, 253},
+		}
 	} else if TodayIs("March 8", day) {
 		occasion = "International Women's Day"
 		colors = []Color{Color{87, 74, 114}, Color{0, 0, 0}}
+	} else if TodayIsRange("March 1", 31, day) {
+		occasion = "March"
+		colors = []Color{
+			Color{111, 139, 199},
+			Color{84, 180, 149},
+			Color{74, 146, 90},
+			Color{69, 141, 53},
+			Color{63, 75, 133},
+		}
+	} else if TodayIsRange("April 1", 30, day) {
+		occasion = "April"
+		colors = []Color{
+			Color{184, 149, 214},
+			Color{197, 181, 229},
+			Color{206, 216, 255},
+			Color{232, 255, 210},
+			Color{248, 249, 171},
+		}
+	} else if TodayIsRange("May 1", 31, day) {
+		occasion = "May"
+		colors = []Color{
+			Color{27, 236, 123},
+			Color{02, 246, 139},
+			Color{49, 255, 150},
+			Color{55, 204, 222},
+			Color{34, 203, 249},
+		}
+	} else if TodayIsRange("June 1", 30, day) {
+		occasion = "June"
+		colors = []Color{
+			Color{255, 239, 63},
+			Color{112, 224, 255},
+			Color{227, 160, 242},
+			Color{255, 154, 219},
+			Color{204, 255, 0},
+		}
+	} else if TodayIsRange("July 1", 31, day) {
+		occasion = "July"
+		colors = []Color{
+			Color{44, 201, 80},
+			Color{38, 78, 90},
+			Color{2, 154, 201},
+			Color{5, 186, 125},
+			Color{51, 124, 84},
+		}
+	} else if TodayIsRange("August 1", 31, day) {
+		occasion = "August"
+		colors = []Color{
+
+			Color{2, 135, 188},
+			Color{9, 103, 167},
+			Color{32, 93, 146},
+			Color{54, 204, 109},
+			Color{39, 131, 66},
+		}
+	} else if TodayIsRange("September 1", 30, day) {
+		occasion = "September"
+		colors = []Color{
+			Color{78, 176, 129},
+			Color{4, 193, 186},
+			Color{8, 129, 85},
+			Color{93, 170, 139},
+			Color{03, 152, 211},
+		}
+	} else if TodayIsRange("October 1", 31, day) {
+		occasion = "October"
+		colors = []Color{
+			Color{47, 141, 0},
+			Color{20, 80, 0},
+			Color{01, 89, 5},
+			Color{8, 23, 3},
+			Color{7, 0, 0},
+		}
+	} else if TodayIsRange("November 1", 30, day) {
+		occasion = "November"
+		colors = []Color{
+			Color{55, 195, 31},
+			Color{20, 117, 0},
+			Color{72, 67, 12},
+			Color{18, 41, 0},
+			Color{30, 18, 16},
+		}
+	} else if TodayIsRange("December 1", 31, day) {
+		occasion = "December"
+		colors = []Color{
+			Color{87, 22, 20},
+			Color{29, 0, 0},
+			Color{8, 99, 24},
+			Color{9, 46, 5},
+			Color{5, 59, 46},
+		}
 	} else {
 		occasion = "(No Occasion)"
 		colors = []Color{}
@@ -91,7 +200,7 @@ func parse_input_date(input string, normalized_day time.Time) time.Time {
 func MonthToMonth(input string) time.Month {
 	fake_date := time.Date(2000, time.January, 1, 0, 0, 0, 0, time.Now().Location())
 	month := fake_date.Month()
-	for i := 1; i < 12; i++ {
+	for i := 1; i <= 12; i++ {
 		if fake_date.Month().String() == input {
 			return fake_date.Month()
 		}
