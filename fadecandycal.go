@@ -46,7 +46,11 @@ func displayPattern(oc *opc.Client, leds_len int, color_palette []colors.Color) 
 			m.SetPixelColor(i, random(2, 255), random(2, 255), random(2, 255))
 		}
 	} else {
-		fmt.Println("TODO: work with the palette")
+		for i := 0; i < leds_len; i++ {
+			m.SetLength(uint16(leds_len * 3))
+			c := color_palette[rand.Intn(len(color_palette))]
+			m.SetPixelColor(i, c.R, c.G, c.B)
+		}
 	}
 	err := oc.Send(m)
 	if err != nil {
@@ -154,7 +158,6 @@ func main() {
 	for {
 		today := getToday()
 		color_palette := colors.GetDaysColors(today)
-		fmt.Println(color_palette)
 		if shouldIBeOn() == true {
 			displayPattern(oc, leds_len, color_palette)
 		} else {

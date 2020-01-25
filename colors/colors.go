@@ -43,11 +43,12 @@ func GetDaysColors(day time.Time) []Color {
 	} else if TodayIsRange("January 1", 31, day) {
 		occasion = "January"
 		colors = []Color{
-			Color{204, 204, 204},
-			Color{159, 184, 181},
-			Color{108, 121, 129},
-			Color{83, 74, 96},
-			Color{64, 70, 111},
+			Color{13, 10, 94},
+			Color{125, 123, 144},
+			Color{60, 141, 135},
+			Color{109, 65, 139},
+			Color{124, 67, 105},
+			Color{255, 255, 255},
 		}
 	} else if TodayIsRange("February 1", 2, day) {
 		occasion = "Red/Gold - 49ers at Superbowl"
