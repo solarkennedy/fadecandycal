@@ -133,22 +133,9 @@ func parseOverride(input string) time.Time {
 	month := s[0]
 	day, _ := strconv.Atoi(s[1])
 	today := time.Now()
-	parsed := time.Date(today.Year(), monthToMonth(month), day, 0, 0, 0, 0, today.Location())
+	parsed := time.Date(today.Year(), colors.MonthToMonth(month), day, 0, 0, 0, 0, today.Location())
 	fmt.Printf("Parsed env override '%s' as '%s'\n", input, parsed)
 	return parsed
-}
-
-func monthToMonth(input string) time.Month {
-	month := time.Month(0)
-	for i := 1; i < 12; i++ {
-		month = time.Month((1 << uint(i-1)))
-		if month.String() == input {
-			return month
-		}
-
-	}
-	return month
-
 }
 
 func getToday() time.Time {

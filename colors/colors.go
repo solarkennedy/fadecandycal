@@ -69,10 +69,35 @@ func TodayIs(input string, today time.Time) bool {
 }
 
 func TodayIsRange(input string, n int, today time.Time) bool {
-	for i := 0; i < n; i++ {
-		if TodayIs(input, today.AddDate(0, 0, i)) {
-			return true
+	//BUG: Normalizes the date comparison within the same year,
+	//so it can't really span year boundaries
+	//	fmt.Printf("Is %s within %d days after %s?\n", today, n, input)
+	input_date := parse_input_date(input, today)
+	last_date := input_date.AddDate(0, 0, n)
+	//	fmt.Printf("(Between %s and %s\n", input_date, last_date)
+	result := (today.After(input_date) && today.Before(last_date)) || input_date == today
+	//	fmt.Println(result)
+	return result
+}
+
+func parse_input_date(input string, normalized_day time.Time) time.Time {
+	s := strings.Split(input, " ")
+	month := s[0]
+	day, _ := strconv.Atoi(s[1])
+	parsed := time.Date(normalized_day.Year(), MonthToMonth(month), day, 0, 0, 0, 0, normalized_day.Location())
+	return parsed
+}
+
+func MonthToMonth(input string) time.Month {
+	fake_date := time.Date(2000, time.January, 1, 0, 0, 0, 0, time.Now().Location())
+	month := fake_date.Month()
+	for i := 1; i < 12; i++ {
+		if fake_date.Month().String() == input {
+			return fake_date.Month()
 		}
+		fake_date = fake_date.AddDate(0, 1, 0)
+
 	}
-	return false
+	panic(fmt.Sprintf("What is this month? %s", input))
+	return month
 }
