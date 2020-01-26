@@ -36,7 +36,13 @@ func GetDaysColors(day time.Time) []Color {
 		colors = []Color{Color{239, 52, 35}, Color{255, 209, 2}, Color{46, 151, 67}, Color{}}
 	} else if TodayIs("January 25", day) {
 		occasion = "Chinese New Year"
-		colors = []Color{Color{120, 0, 0}, Color{168, 0, 0}, Color{190, 24, 0}, Color{255, 212, 37}, Color{239, 196, 22}}
+		colors = []Color{
+			Color{0, 0, 0},
+			Color{255, 0, 0},
+			Color{190, 24, 0},
+			Color{255, 212, 37},
+			Color{239, 196, 22},
+		}
 	} else if TodayIs("January 29", day) {
 		occasion = "NEN Awards"
 		colors = []Color{Color{151, 193, 209}, Color{123, 170, 124}, Color{250, 187, 24}}

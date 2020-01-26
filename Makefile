@@ -20,3 +20,6 @@ test:
 
 fmt:
 	go fmt ...
+
+clean:
+	rm fadecandycal.mips fadecandycal
