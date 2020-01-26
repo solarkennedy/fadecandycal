@@ -16,6 +16,12 @@ import (
 	"time"
 )
 
+func Now() time.Time {
+		pst, _ := time.LoadLocation("America/Los_Angeles")
+		now := time.Now().In(pst)
+		return now
+}
+
 func getEnvOverride() string {
 	return os.Getenv("FADECANDYCAL_DATE")
 }
@@ -31,8 +37,7 @@ func shouldIBeOn() bool {
 	} else if isKodiPlayingVideo() {
 		return false
 	} else {
-		pst, _ := time.LoadLocation("America/Los_Angeles")
-		now := time.Now().In(pst)
+		now := Now()
 		hour := now.Hour()
 		return (hour >= 18 && hour <= 21) || (hour > 6 && hour <= 7)
 	}
@@ -49,7 +54,7 @@ func displayPattern(oc *opc.Client, leds_len int, color_palette []colors.Color) 
 		for i := 0; i < leds_len; i++ {
 			m.SetLength(uint16(leds_len * 3))
 			c := color_palette[rand.Intn(len(color_palette))]
-			m.SetPixelColor(i, c.R, c.G, c.B)
+			m.SetPixelColor(i, c.G, c.R, c.B)
 		}
 	}
 	err := oc.Send(m)
@@ -136,7 +141,7 @@ func parseOverride(input string) time.Time {
 	s := strings.Split(input, " ")
 	month := s[0]
 	day, _ := strconv.Atoi(s[1])
-	today := time.Now()
+	today := Now()
 	parsed := time.Date(today.Year(), colors.MonthToMonth(month), day, 0, 0, 0, 0, today.Location())
 	fmt.Printf("Parsed env override '%s' as '%s'\n", input, parsed)
 	return parsed
@@ -147,7 +152,7 @@ func getToday() time.Time {
 	if override != "" {
 		return parseOverride(override)
 	} else {
-		return time.Now()
+		return Now()
 	}
 }
 
