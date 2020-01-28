@@ -122,6 +122,9 @@ func GetDaysColors(day time.Time) []Color {
 			Color{5, 186, 125},
 			Color{51, 124, 84},
 		}
+	} else if TodayIs("August 8", day) {
+		occasion = "Pantone 448c"
+		colors = []Color{Color{74,65,42}, Color{}}
 	} else if TodayIsRange("August 1", 31, day) {
 		occasion = "August"
 		colors = []Color{
