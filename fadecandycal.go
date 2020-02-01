@@ -32,6 +32,7 @@ func getSunriseSunset() (time.Time, time.Time) {
 	}
 	sunrise_today := time.Date(now.Year(), now.Month(), now.Day(), sunrise.Hour(), sunrise.Minute(), sunrise.Second(), 0, now.Location())
 	sunset_today := time.Date(now.Year(), now.Month(), now.Day(), sunset.Hour(), sunset.Minute(), sunset.Second(), 0, now.Location())
+	fmt.Println("Sunrise:", sunrise_today.Format("3:04PM"), " / Sunset:", sunset_today.Format("3:04PM"))
 	return sunrise_today, sunset_today
 }
 
