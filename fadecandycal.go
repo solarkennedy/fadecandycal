@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/kellydunn/go-opc"
+	"github.com/kelvins/sunrisesunset"
 	"github.com/solarkennedy/fadecandycal/colors"
 	"io/ioutil"
 	"log"
@@ -16,10 +17,36 @@ import (
 	"time"
 )
 
+func getSunriseSunset() (time.Time, time.Time) {
+	now := Now()
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
+	p := sunrisesunset.Parameters{
+		Latitude:  -37.774929,
+		Longitude: -122.419418,
+		UtcOffset: getUTCOffset(),
+		Date:      today,
+	}
+	sunrise, sunset, err := p.GetSunriseSunset()
+	if err != nil {
+		panic(err)
+	}
+	sunrise_today := time.Date(now.Year(), now.Month(), now.Day(), sunrise.Hour(), sunrise.Minute(), sunrise.Second(), 0, now.Location())
+	sunset_today := time.Date(now.Year(), now.Month(), now.Day(), sunset.Hour(), sunset.Minute(), sunset.Second(), 0, now.Location())
+	return sunrise_today, sunset_today
+}
+
+func getUTCOffset() float64 {
+	offset, err := strconv.Atoi(Now().Format("-0700"))
+	if err != nil {
+		panic(err)
+	}
+	return float64(offset / 100)
+}
+
 func Now() time.Time {
-		pst, _ := time.LoadLocation("America/Los_Angeles")
-		now := time.Now().In(pst)
-		return now
+	pst, _ := time.LoadLocation("America/Los_Angeles")
+	now := time.Now().In(pst)
+	return now
 }
 
 func getEnvOverride() string {
@@ -39,7 +66,8 @@ func shouldIBeOn() bool {
 	} else {
 		now := Now()
 		hour := now.Hour()
-		return (hour >= 18 && hour <= 21) || (hour > 6 && hour <= 7)
+		rise, set := getSunriseSunset()
+		return (now.After(set) && hour <= 21) || (now.After(rise) && hour <= 7)
 	}
 }
 
