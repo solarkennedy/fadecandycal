@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/kellydunn/go-opc"
-	"github.com/kelvins/sunrisesunset"
 	"github.com/solarkennedy/fadecandycal/colors"
 	"io/ioutil"
 	"log"
@@ -18,30 +17,7 @@ import (
 )
 
 func getSunriseSunset() (time.Time, time.Time) {
-	now := Now()
-	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
-	p := sunrisesunset.Parameters{
-		Latitude:  -37.774929,
-		Longitude: -122.419418,
-		UtcOffset: getUTCOffset(),
-		Date:      today,
-	}
-	sunrise, sunset, err := p.GetSunriseSunset()
-	if err != nil {
-		panic(err)
-	}
-	sunrise_today := time.Date(now.Year(), now.Month(), now.Day(), sunrise.Hour(), sunrise.Minute(), sunrise.Second(), 0, now.Location())
-	sunset_today := time.Date(now.Year(), now.Month(), now.Day(), sunset.Hour(), sunset.Minute(), sunset.Second(), 0, now.Location())
-	fmt.Println("Sunrise:", sunrise_today.Format("3:04PM"), " / Sunset:", sunset_today.Format("3:04PM"))
-	return sunrise_today, sunset_today
-}
-
-func getUTCOffset() float64 {
-	offset, err := strconv.Atoi(Now().Format("-0700"))
-	if err != nil {
-		panic(err)
-	}
-	return float64(offset / 100)
+	return Now(), Now()
 }
 
 func Now() time.Time {
@@ -67,8 +43,9 @@ func shouldIBeOn() bool {
 	} else {
 		now := Now()
 		hour := now.Hour()
-		rise, set := getSunriseSunset()
-		return (now.After(set) && hour <= 21) || (now.After(rise) && hour <= 7)
+		//		rise, set := getSunriseSunset()
+		//return (now.After(set) && hour <= 21) || (now.After(rise) && hour <= 7)
+		return (hour >= 18 && hour <= 21) || (hour > 6 && hour <= 7)
 	}
 }
 
@@ -197,6 +174,6 @@ func main() {
 		} else {
 			turnOff(oc, leds_len)
 		}
-		time.Sleep(time.Duration(10) * time.Second)
+		time.Sleep(time.Duration(7) * time.Second)
 	}
 }
