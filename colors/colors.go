@@ -77,6 +77,29 @@ func GetDaysColors(day time.Time) []Color {
 	} else if TodayIs("March 8", day) {
 		occasion = "International Women's Day"
 		colors = []Color{Color{87, 74, 114}, Color{0, 0, 0}}
+	} else if TodayIs("March 17", day) {
+		occasion = "Saint Patrick's Day"
+		colors = []Color{Color{0, 153, 89}, Color{0, 0, 0}}
+	} else if TodayIsRange("March 19", 2, day) {
+		occasion = "Nowruz/Persian New Year"
+		colors = []Color{
+			Color{255, 0, 0},
+			Color{0, 255, 0},
+			Color{255, 255, 255},
+			Color{0, 0, 0},
+		}
+	} else if TodayIs("March 21", day) {
+		occasion = "American Red Cross Day"
+		colors = []Color{Color{255, 0, 0}, Color{0, 0, 0}}
+	} else if TodayIs("March 24", day) {
+		occasion = "World TB Day"
+		colors = []Color{Color{153, 0, 0}, Color{0, 0, 0}}
+	} else if TodayIs("March 25", day) {
+		occasion = "National Cerebral Palsy Awareness Month"
+		colors = []Color{Color{31, 158, 31}, Color{0, 0, 0}}
+	} else if TodayIs("March 26", day) {
+		occasion = "Colon Cancer Awareness Month"
+		colors = []Color{Color{0, 128, 255}, Color{0, 0, 0}, Color{255, 255, 255}}
 	} else if TodayIsRange("March 1", 31, day) {
 		occasion = "March"
 		colors = []Color{
