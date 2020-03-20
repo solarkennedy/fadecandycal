@@ -3,15 +3,15 @@ go:
 	bash -c 'FADECANDYCAL_DATE=`date  "+%B %d"` ./fadecandycal'
 
 stop:
-	ssh root@10.0.2.113 -- /etc/init.d/fadecandycal stop
+	ssh root@fadecandycal -- /etc/init.d/fadecandycal stop
 
 restart:
-	ssh root@10.0.2.113 -- /etc/init.d/fadecandycal restart
+	ssh root@fadecandycal -- /etc/init.d/fadecandycal restart
 
 deploy: fadecandycal.mips
-	scp fadecandycal.mips root@10.0.2.113:/tmp/
+	scp fadecandycal.mips root@fadecandycal:/tmp/
 
-fadecandycal.mips: fadecandycal.go
+fadecandycal.mips: fadecandycal.go colors/colors.go
 	GOOS=linux GOARCH=mips GOMIPS=softfloat go build -o fadecandycal.mips .
 
 test:

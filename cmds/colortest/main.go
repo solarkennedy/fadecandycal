@@ -8,7 +8,7 @@ import (
 )
 
 func getOCClient() *opc.Client {
-	server := "10.0.2.113:7890"
+	server := "fadecandycal:7890"
 	oc := opc.NewClient()
 	err := oc.Connect("tcp", server)
 	if err != nil {
