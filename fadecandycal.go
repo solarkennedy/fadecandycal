@@ -51,19 +51,24 @@ func shouldIBeOn() bool {
 
 func displayPattern(oc *opc.Client, leds_len int, color_palette []colors.Color) {
 	m := opc.NewMessage(0)
+	led_grouping := 7
 	if len(color_palette) == 0 {
 		for i := 0; i < leds_len; i++ {
 			m.SetLength(uint16(leds_len * 3))
 			m.SetPixelColor(i, random(2, 255), random(2, 255), random(2, 255))
 		}
 	} else {
-		for i := 0; i < leds_len; i++ {
-			m.SetLength(uint16(leds_len * 3))
+		for i := 0; i < leds_len; i += led_grouping {
 			c := color_palette[rand.Intn(len(color_palette))]
-			m.SetPixelColor(i, c.G, c.R, c.B)
+			for j := i; j < (i + led_grouping); j++ {
+				m.SetLength(uint16(leds_len * 3))
+				m.SetPixelColor(j, c.G, c.R, c.B)
+				colors.PrintColorBlock(c)
+			}
 		}
 	}
 	err := oc.Send(m)
+	fmt.Println()
 	if err != nil {
 		log.Println("couldn't send color", err)
 	}
@@ -163,7 +168,7 @@ func getToday() time.Time {
 }
 
 func main() {
-	leds_len := 50
+	leds_len := 35
 	oc := getOCClient()
 
 	for {
@@ -174,6 +179,6 @@ func main() {
 		} else {
 			turnOff(oc, leds_len)
 		}
-		time.Sleep(time.Duration(7) * time.Second)
+		time.Sleep(time.Duration(5) * time.Second)
 	}
 }

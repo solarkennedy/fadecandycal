@@ -15,10 +15,14 @@ type Color struct {
 func PrintColors(colors []Color, occasion string, day time.Time) {
 	fmt.Printf("For %s (%s) our colors will be [", occasion, day)
 	for _, c := range colors {
-		cprint := color.RGB(c.R, c.G, c.B) // fg color
-		cprint.Print("█")
+		PrintColorBlock(c)
 	}
 	fmt.Println("]")
+}
+
+func PrintColorBlock(c Color) {
+		cprint := color.RGB(c.R, c.G, c.B) // fg color
+		cprint.Print("█")
 }
 
 func GetDaysColors(day time.Time) []Color {
@@ -108,6 +112,7 @@ func GetDaysColors(day time.Time) []Color {
 			Color{74, 146, 90},
 			Color{69, 141, 53},
 			Color{63, 75, 133},
+			Color{0, 0, 0},
 		}
 	} else if TodayIsRange("April 1", 30, day) {
 		occasion = "April"
