@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/kellydunn/go-opc"
-	"github.com/solarkennedy/fadecandycal/colors"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -14,11 +12,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
-)
 
-func getSunriseSunset() (time.Time, time.Time) {
-	return Now(), Now()
-}
+	"github.com/kellydunn/go-opc"
+	"github.com/solarkennedy/fadecandycal/colors"
+)
 
 func Now() time.Time {
 	pst, _ := time.LoadLocation("America/Los_Angeles")
@@ -51,7 +48,7 @@ func shouldIBeOn() bool {
 
 func displayPattern(oc *opc.Client, leds_len int, color_palette []colors.Color) {
 	m := opc.NewMessage(0)
-	led_grouping := 7
+	led_grouping := 1
 	if len(color_palette) == 0 {
 		for i := 0; i < leds_len; i++ {
 			m.SetLength(uint16(leds_len * 3))
@@ -62,7 +59,7 @@ func displayPattern(oc *opc.Client, leds_len int, color_palette []colors.Color) 
 			c := color_palette[rand.Intn(len(color_palette))]
 			for j := i; j < (i + led_grouping); j++ {
 				m.SetLength(uint16(leds_len * 3))
-				m.SetPixelColor(j, c.G, c.R, c.B)
+				m.SetPixelColor(j, c.R, c.G, c.B)
 				colors.PrintColorBlock(c)
 			}
 		}
@@ -118,21 +115,22 @@ func getKodiGetActivePlayers() []interface{} {
 
 	req, err := http.NewRequest("POST", "http://10.0.2.10:8080/jsonrpc", body)
 	if err != nil {
-		fmt.Println("Error talking to kodi: ")
-		fmt.Println(err)
+		fmt.Println("Error talking to kodi: ", err)
 		return nil
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Println("Error talking to kodi: ")
-		fmt.Println(err)
+		fmt.Println("Error talking to kodi: ", err)
 		return nil
 	}
 	var result map[string]interface{}
 	body_bytes, _ := ioutil.ReadAll(resp.Body)
-	json.Unmarshal(body_bytes, &result)
+	err = json.Unmarshal(body_bytes, &result)
+	if err != nil {
+		fmt.Println("Non fatal error parsing json from Kodi:", err)
+	}
 	players := result["result"].([]interface{})
 	defer resp.Body.Close()
 	return players
@@ -168,17 +166,17 @@ func getToday() time.Time {
 }
 
 func main() {
-	leds_len := 35
+	leds_len := 64
 	oc := getOCClient()
 
 	for {
 		today := getToday()
 		color_palette := colors.GetDaysColors(today)
-		if shouldIBeOn() == true {
+		if shouldIBeOn() {
 			displayPattern(oc, leds_len, color_palette)
 		} else {
 			turnOff(oc, leds_len)
 		}
-		time.Sleep(time.Duration(5) * time.Second)
+		time.Sleep(time.Duration(1) * time.Second)
 	}
 }
